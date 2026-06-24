@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-black via-[#1a1208] to-black">
+    <section className="relative overflow-hidden bg-linear-to-br from-black via-[#1a1208] to-black">
       <div className="mx-auto grid min-h-[85vh] max-w-7xl items-center gap-12 px-6 py-20 md:grid-cols-2">
         <div>
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.35em] text-[#d4af37]">
@@ -36,7 +36,7 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="flex justify-center">
+        <div className="hidden md:flex justify-center">
           <Image
             src="/logo.png"
             alt="Afro Essentials"
