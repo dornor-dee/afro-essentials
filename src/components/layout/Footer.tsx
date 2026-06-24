@@ -7,7 +7,7 @@ export default function Footer() {
           <p className="mt-2 text-sm text-white/60">From Ghana to the World.</p>
         </div>
 
-        <p className="text-sm text-white/50">
+        <p className="text-sm text-white/50" suppressHydrationWarning>
           © {new Date().getFullYear()} Afro Essentials. All rights reserved.
         </p>
       </div>
