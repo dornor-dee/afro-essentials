@@ -3,7 +3,11 @@ import { DEFAULT_PORT } from "../constants";
 
 dotenv.config();
 
-const requiredEnvVars = ["MONGODB_URI", "JWT_SECRET"];
+const requiredEnvVars = [
+  "MONGODB_URI",
+  "JWT_ACCESS_SECRET",
+  "JWT_REFRESH_SECRET",
+];
 
 requiredEnvVars.forEach((key) => {
   if (!process.env[key]) {
@@ -13,8 +17,21 @@ requiredEnvVars.forEach((key) => {
 
 export const env = {
   nodeEnv: process.env.NODE_ENV || "development",
+
   port: Number(process.env.PORT) || DEFAULT_PORT,
+
   mongodbUri: process.env.MONGODB_URI as string,
-  jwtSecret: process.env.JWT_SECRET as string,
-  clientUrl: process.env.CLIENT_URL || "http://localhost:3000",
+
+  jwtAccessSecret: process.env.JWT_ACCESS_SECRET as string,
+
+  jwtRefreshSecret: process.env.JWT_REFRESH_SECRET as string,
+
+  clientUrl:
+    process.env.CLIENT_URL || "http://localhost:3000",
+
+  accessTokenExpires:
+    process.env.ACCESS_TOKEN_EXPIRES || "15m",
+
+  refreshTokenExpires:
+    process.env.REFRESH_TOKEN_EXPIRES || "7d",
 };

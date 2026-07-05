@@ -1,10 +1,19 @@
 import { Request, Response } from "express";
+import jwt from "jsonwebtoken";
 import User from "../models/User";
+import { env } from "../config/env";
 import {
   generateAccessToken,
   generateRefreshToken,
 } from "../utils/generateToken";
 import { AuthRequest } from "../middleware/auth.middleware";
+
+const cookieOptions = {
+  httpOnly: true,
+  secure: env.nodeEnv === "production",
+  sameSite: "lax" as const,
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+};
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -19,11 +28,7 @@ export const register = async (req: Request, res: Response) => {
       });
     }
 
-    const user = await User.create({
-      name,
-      email,
-      password,
-    });
+    const user = await User.create({ name, email, password });
 
     const userId = String(user._id);
 
@@ -33,11 +38,12 @@ export const register = async (req: Request, res: Response) => {
     user.refreshToken = refreshToken;
     await user.save();
 
+    res.cookie("refreshToken", refreshToken, cookieOptions);
+
     return res.status(201).json({
       success: true,
       message: "Registration successful",
       accessToken,
-      refreshToken,
       user: {
         id: userId,
         name: user.name,
@@ -85,10 +91,12 @@ export const login = async (req: Request, res: Response) => {
     user.refreshToken = refreshToken;
     await user.save();
 
+    res.cookie("refreshToken", refreshToken, cookieOptions);
+
     return res.json({
       success: true,
+      message: "Login successful",
       accessToken,
-      refreshToken,
       user: {
         id: userId,
         name: user.name,
@@ -102,6 +110,76 @@ export const login = async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       message: "Server Error",
+    });
+  }
+};
+
+export const refreshAccessToken = async (req: Request, res: Response) => {
+  try {
+    const token = req.cookies?.refreshToken;
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "Refresh token missing",
+      });
+    }
+
+    const decoded = jwt.verify(token, env.jwtRefreshSecret) as {
+      userId: string;
+    };
+
+    const user = await User.findById(decoded.userId).select("+refreshToken");
+
+    if (!user || user.refreshToken !== token) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid refresh token",
+      });
+    }
+
+    const accessToken = generateAccessToken(String(user._id), user.role);
+
+    return res.json({
+      success: true,
+      accessToken,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(401).json({
+      success: false,
+      message: "Invalid refresh token",
+    });
+  }
+};
+
+export const logout = async (req: Request, res: Response) => {
+  try {
+    const token = req.cookies?.refreshToken;
+
+    if (token) {
+      const decoded = jwt.verify(token, env.jwtRefreshSecret) as {
+        userId: string;
+      };
+
+      await User.findByIdAndUpdate(decoded.userId, {
+        refreshToken: "",
+      });
+    }
+
+    res.clearCookie("refreshToken", cookieOptions);
+
+    return res.json({
+      success: true,
+      message: "Logout successful",
+    });
+  } catch (_error) {
+    res.clearCookie("refreshToken", cookieOptions);
+
+    return res.json({
+      success: true,
+      message: "Logout successful",
     });
   }
 };
