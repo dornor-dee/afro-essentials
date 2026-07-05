@@ -3,8 +3,7 @@ import bcrypt from "bcryptjs";
 import { USER_ROLES } from "../constants";
 
 export interface IUser extends Document {
-  firstName: string;
-  lastName: string;
+  name: string;
   email: string;
   password: string;
   phone?: string;
@@ -16,16 +15,12 @@ export interface IUser extends Document {
 
 const userSchema = new Schema<IUser>(
   {
-    firstName: {
+    name: {
       type: String,
-      required: [true, "First name is required"],
+      required: [true, "Name is required"],
       trim: true,
     },
-    lastName: {
-      type: String,
-      required: [true, "Last name is required"],
-      trim: true,
-    },
+
     email: {
       type: String,
       required: [true, "Email is required"],
@@ -33,25 +28,31 @@ const userSchema = new Schema<IUser>(
       lowercase: true,
       trim: true,
     },
+
     password: {
       type: String,
       required: [true, "Password is required"],
       minlength: 6,
       select: false,
     },
+
     phone: {
       type: String,
       trim: true,
+      default: "",
     },
+
     role: {
       type: String,
       enum: Object.values(USER_ROLES),
       default: USER_ROLES.CUSTOMER,
     },
+
     isVerified: {
       type: Boolean,
       default: false,
     },
+
     refreshToken: {
       type: String,
       select: false,
