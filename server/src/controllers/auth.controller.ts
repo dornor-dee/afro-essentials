@@ -8,7 +8,7 @@ import { AuthRequest } from "../middleware/auth.middleware";
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { firstName, lastName, email, password, phone } = req.body;
+    const { name, email, password } = req.body;
 
     const existingUser = await User.findOne({ email });
 
@@ -20,11 +20,9 @@ export const register = async (req: Request, res: Response) => {
     }
 
     const user = await User.create({
-      firstName,
-      lastName,
+      name,
       email,
       password,
-      phone,
     });
 
     const userId = String(user._id);
@@ -42,8 +40,7 @@ export const register = async (req: Request, res: Response) => {
       refreshToken,
       user: {
         id: userId,
-        firstName: user.firstName,
-        lastName: user.lastName,
+        name: user.name,
         email: user.email,
         role: user.role,
       },
@@ -94,8 +91,7 @@ export const login = async (req: Request, res: Response) => {
       refreshToken,
       user: {
         id: userId,
-        firstName: user.firstName,
-        lastName: user.lastName,
+        name: user.name,
         email: user.email,
         role: user.role,
       },
