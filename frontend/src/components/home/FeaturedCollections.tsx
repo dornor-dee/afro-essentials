@@ -38,43 +38,43 @@ const collections = [
 
 export default function FeaturedCollections() {
   return (
-    <section className="bg-[#f8f5ee] px-6 py-20">
+    <section className="bg-[#f8f5ee] px-2 md:px-6 py-20">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-12 text-center">
+        <div className="mb-5 md:mb-12 text-center">
           <p className="font-semibold uppercase tracking-[0.3em] text-[#d4af37]">
             Our Collections
           </p>
 
-          <h2 className="mt-4 text-4xl font-bold text-black md:text-5xl">
+          <h2 className="mt-4 text-3xl font-bold text-black md:text-5xl">
             Authentic Fabrics From Ghana
           </h2>
 
-          <p className="mx-auto mt-4 max-w-3xl text-gray-600">
+          <p className="mx-auto mt-4 max-w-3xl text-gray-600 text-left md:text-center px-2">
             Explore our carefully selected collection of premium African fabrics
             and authentic Ghanaian textiles.
           </p>
         </div>
 
-       <div className="mx-auto grid max-w-7xl gap-8 px-6 md:grid-cols-2 lg:grid-cols-3">
-  {collections.map((item) => (
-    <div
-      key={item.title}
-      className="rounded-2xl bg-white p-8 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
-    >
-      <h3 className="mb-4 text-2xl font-bold text-[#111111]">
-        {item.title}
-      </h3>
+        <div className="mx-auto grid max-w-7xl gap-2 md:gap-8 px-2 md:px-6 grid-cols-2 lg:grid-cols-3">
+          {collections.map((item) => (
+            <div
+              key={item.title}
+              className="flex md:block flex-col justify-center items-center rounded-xl md:rounded-2xl bg-white p-2 md:p-8 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+            >
+              <p className="md:mb-4 text-lg md:text-2xl font-medium md:font-bold text-[#111111]">
+                {item.title}
+              </p>
 
-      <p className="leading-7 text-gray-600">
-        {item.description}
-      </p>
+              <p className="leading-7 text-gray-600 hidden md:block">
+                {item.description}
+              </p>
 
-      <button className="mt-6 font-semibold text-[#d4af37] hover:text-[#b89329]">
-        Shop Collection →
-      </button>
-    </div>
-  ))}
-</div>
+              <button className="mt-6 font-semibold text-[#d4af37] hover:text-[#b89329] hidden md:block">
+                Shop Collection →
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
