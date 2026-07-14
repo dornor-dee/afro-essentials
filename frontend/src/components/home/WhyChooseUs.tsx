@@ -1,3 +1,5 @@
+import { CheckCircle2 } from "lucide-react";
+
 export default function WhyChooseUs() {
   const features = [
     "Authentic Ghanaian Fabrics",
@@ -9,27 +11,19 @@ export default function WhyChooseUs() {
   ];
 
   return (
-    <section className="bg-[#f8f5ee] py-24">
+    <section className="bg-white py-16 border-t border-gray-100">
       <div className="mx-auto max-w-7xl px-6">
-        <p className="text-center text-sm font-bold uppercase tracking-[0.3em] text-[#d4af37]">
-          Why Choose Us
-        </p>
+        <div className="text-center mb-10">
+          <h2 className="text-3xl font-bold text-black">
+            The Afro Essentials Difference
+          </h2>
+        </div>
 
-        <h2 className="mt-4 text-center text-5xl font-bold text-black">
-          The Afro Essentials Difference
-        </h2>
-
-        <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-y-6 gap-x-8 md:grid-cols-2 lg:grid-cols-3">
           {features.map((feature) => (
-            <div
-              key={feature}
-              className="rounded-2xl bg-white p-8 shadow-md hover:shadow-xl transition"
-            >
-              <div className="mb-4 text-3xl text-[#d4af37]">✓</div>
-
-              <h3 className="text-xl font-semibold text-black">
-                {feature}
-              </h3>
+            <div key={feature} className="flex items-center gap-4 p-2">
+              <CheckCircle2 className="h-6 w-6 text-[#d4af37] shrink-0" />
+              <h3 className="text-lg font-medium text-gray-800">{feature}</h3>
             </div>
           ))}
         </div>
