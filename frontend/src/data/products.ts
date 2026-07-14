@@ -34,15 +34,4 @@ export const products: Product[] = [
     description: "Luxury Dutch wax fabric.",
     featured: true,
   },
-  {
-    id: "4",
-    name: "Vlisco Holland Gold",
-    slug: "vlisco-holland-gold",
-    brand: "Vlisco",
-    category: "Dutch Wax",
-    price: 95,
-    image: "/auth-image.jpeg",
-    description: "Luxury Dutch wax fabric.",
-    featured: true,
-  },
 ];
