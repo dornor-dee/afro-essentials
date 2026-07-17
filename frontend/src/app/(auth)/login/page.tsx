@@ -9,20 +9,33 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useLoginMutation } from "@/hooks/useAuth";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 
-const LoginPage = () => {
+const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isEmailLoading, setIsEmailLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const loginMutation = useLoginMutation();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/";
 
   const onSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    loginMutation.mutate(
+      { email, password },
+      {
+        onSuccess: () => {
+          router.refresh();
+          router.push(redirect);
+        },
+      },
+    );
   };
 
   const handleGoogleSignIn = () => {
@@ -40,7 +53,11 @@ const LoginPage = () => {
             Enter your email below to login to your account
           </p>
         </div>
-        {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+        {loginMutation.error && (
+          <p className="text-sm text-red-500 text-center">
+            {loginMutation.error.message}
+          </p>
+        )}
         <Field>
           <FieldLabel htmlFor="email">Email</FieldLabel>
           <Input
@@ -86,8 +103,11 @@ const LoginPage = () => {
           </div>
         </Field>
         <Field>
-          <Button type="submit" disabled={isEmailLoading || isGoogleLoading}>
-            {isEmailLoading && (
+          <Button
+            type="submit"
+            disabled={loginMutation.isPending || isGoogleLoading}
+          >
+            {loginMutation.isPending && (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             )}
             Login
@@ -99,7 +119,7 @@ const LoginPage = () => {
             variant="outline"
             type="button"
             onClick={handleGoogleSignIn}
-            disabled={isGoogleLoading || isEmailLoading}
+            disabled={isGoogleLoading || loginMutation.isPending}
             className="border-primary"
           >
             {isGoogleLoading ? (
@@ -130,4 +150,14 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-[#f7f3e8] px-6 py-16 text-black" />
+      }
+    >
+      <LoginForm />
+    </Suspense>
+  );
+}

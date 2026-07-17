@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingBag, Search, Heart, User, X } from "lucide-react";
+import { ShoppingBag, Search, Heart, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { useCart } from "@/context/CartContext";

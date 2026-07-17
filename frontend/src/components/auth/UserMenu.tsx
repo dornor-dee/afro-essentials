@@ -11,14 +11,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/context/AuthContext";
+import { useLogoutMutation } from "@/hooks/useAuth";
+import { usePathname } from "next/navigation";
 
 export default function UserMenu() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
+  const logoutMutation = useLogoutMutation();
+  const path = usePathname();
+
+  const handleLogout = () => {
+    logoutMutation.mutate();
+  };
 
   if (!user) {
     return (
       <Link
-        href="/login"
+        href={`/login?redirect=${encodeURIComponent(path)}`}
         className="bg-primary px-2 py-0.5 rounded-md hover:bg-primary/60"
       >
         Sign In
@@ -69,7 +77,7 @@ export default function UserMenu() {
         <DropdownMenuSeparator className="bg-white/10" />
 
         <DropdownMenuItem
-          onClick={logout}
+          onClick={handleLogout}
           className="cursor-pointer text-red-500 focus:text-white focus:bg-red-500"
         >
           <LogOut size={16} className="mr-2" />

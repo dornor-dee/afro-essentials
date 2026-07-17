@@ -10,22 +10,41 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Loader2, Eye, EyeOff } from "lucide-react";
+import { useSignupMutation } from "@/hooks/useAuth";
+import { useRouter, useSearchParams } from "next/navigation";
 
-const SignUpPage = () => {
+const SignUpForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-  const [isEmailLoading, setIsEmailLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const signupMutation = useSignupMutation();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/";
 
   const onSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+    setError(null);
+    signupMutation.mutate(
+      { name, email, password },
+      {
+        onSuccess: () => {
+          router.refresh();
+          router.push(redirect);
+        },
+      },
+    );
   };
 
   const handleGoogleSignIn = () => {
@@ -43,7 +62,11 @@ const SignUpPage = () => {
             Enter your details below to create your account
           </p>
         </div>
-        {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+        {(error || signupMutation.error) && (
+          <p className="text-sm text-red-500 text-center">
+            {error || signupMutation.error?.message}
+          </p>
+        )}
         <Field>
           <FieldLabel htmlFor="name">Name</FieldLabel>
           <Input
@@ -113,8 +136,11 @@ const SignUpPage = () => {
           </div>
         </Field>
         <Field>
-          <Button type="submit" disabled={isEmailLoading || isGoogleLoading}>
-            {isEmailLoading && (
+          <Button
+            type="submit"
+            disabled={signupMutation.isPending || isGoogleLoading}
+          >
+            {signupMutation.isPending && (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             )}
             Create account
@@ -126,7 +152,7 @@ const SignUpPage = () => {
             variant="outline"
             type="button"
             onClick={handleGoogleSignIn}
-            disabled={isGoogleLoading || isEmailLoading}
+            disabled={isGoogleLoading || signupMutation.isPending}
             className="border-primary"
           >
             {isGoogleLoading ? (
@@ -157,4 +183,14 @@ const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+export default function SignUpPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-[#f7f3e8] px-6 py-16 text-black" />
+      }
+    >
+      <SignUpForm />
+    </Suspense>
+  );
+}
