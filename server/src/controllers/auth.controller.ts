@@ -48,6 +48,7 @@ export const register = async (req: Request, res: Response) => {
         id: userId,
         name: user.name,
         email: user.email,
+        avatar: user.avatar,
         role: user.role,
       },
     });
@@ -101,6 +102,7 @@ export const login = async (req: Request, res: Response) => {
         id: userId,
         name: user.name,
         email: user.email,
+        avatar: user.avatar,
         role: user.role,
       },
     });
