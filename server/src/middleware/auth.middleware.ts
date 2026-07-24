@@ -29,9 +29,9 @@ export const protect = async (
   }
 
   try {
-    const decoded = jwt.verify(token, env.jwtSecret) as {
-      userId: string;
-    };
+    const decoded = jwt.verify(token, env.jwtAccessSecret) as {
+  userId: string;
+};
 
     const user = await User.findById(decoded.userId).select(
       "-password -refreshToken"
@@ -47,11 +47,11 @@ export const protect = async (
     req.user = user;
     next();
   } catch (_error) {
-    return res.status(401).json({
-      success: false,
-      message: "Invalid token",
-    });
-  }
+  return res.status(401).json({
+    success: false,
+    message: "Invalid or expired token",
+  });
+}
 };
 
 export const authorizeRoles = (...roles: string[]) => {

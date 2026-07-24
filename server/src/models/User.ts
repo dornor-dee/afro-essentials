@@ -2,16 +2,38 @@ import mongoose, { Document, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 import { USER_ROLES } from "../constants";
 
+interface IAvatar {
+  url: string;
+  publicId: string;
+}
+
 export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
   phone?: string;
+  avatar: IAvatar;
   role: "admin" | "customer";
   isVerified: boolean;
   refreshToken?: string;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
+
+const avatarSchema = new Schema<IAvatar>(
+  {
+    url: {
+      type: String,
+      default: "",
+    },
+    publicId: {
+      type: String,
+      default: "",
+    },
+  },
+  {
+    _id: false,
+  }
+);
 
 const userSchema = new Schema<IUser>(
   {
@@ -40,6 +62,14 @@ const userSchema = new Schema<IUser>(
       type: String,
       trim: true,
       default: "",
+    },
+
+    avatar: {
+      type: avatarSchema,
+      default: () => ({
+        url: "",
+        publicId: "",
+      }),
     },
 
     role: {
