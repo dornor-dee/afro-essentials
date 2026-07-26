@@ -19,9 +19,10 @@ import {
 } from "@/components/ui/drawer";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { SubmitEvent, useState } from "react";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { useChangePasswordMutation } from "@/hooks/useAuth";
 
 export function ChangePasswordDialog({
   open,
@@ -31,16 +32,13 @@ export function ChangePasswordDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const isMobile = useIsMobile();
-
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-
-  const [isLoading, setIsLoading] = useState(false);
+  const changePasswordMutation = useChangePasswordMutation();
 
   const resetForm = () => {
     setCurrentPassword("");
@@ -58,7 +56,9 @@ export function ChangePasswordDialog({
     onOpenChange(newOpen);
   };
 
-  const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+  const isLoading = changePasswordMutation.isPending;
+
+  const onSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (newPassword !== confirmPassword) {
@@ -66,15 +66,17 @@ export function ChangePasswordDialog({
       return;
     }
 
-    setIsLoading(true);
-    setIsLoading(false);
-
-    // if (error) {
-    //   toast.error(error.message || "Failed to change password.");
-    // } else {
-    //   toast.success("Password changed successfully!");
-    //   handleOpenChange(false);
-    // }
+    await changePasswordMutation.mutateAsync(
+      {
+        currentPassword,
+        newPassword,
+      },
+      {
+        onSuccess: () => {
+          handleOpenChange(false);
+        },
+      },
+    );
   };
 
   const FormContent = (

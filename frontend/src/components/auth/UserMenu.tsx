@@ -15,6 +15,7 @@ import { useLogoutMutation } from "@/hooks/useAuth";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { ChangePasswordDialog } from "./ChangePasswordDialog";
+import { UpdateProfileDialog } from "./UpdateProfileDialog";
 
 export default function UserMenu() {
   const [isOpen, setIsOpen] = useState<string>("");
@@ -71,11 +72,9 @@ export default function UserMenu() {
             </Link>
           </DropdownMenuItem>
 
-          <DropdownMenuItem asChild>
-            <Link href="/account" className="cursor-pointer">
-              <UserCircle size={16} className="mr-2" />
-              Update account info
-            </Link>
+          <DropdownMenuItem onClick={() => setIsOpen("update-profile")}>
+            <UserCircle size={16} className="mr-2" />
+            Update account info
           </DropdownMenuItem>
 
           <DropdownMenuItem onClick={() => setIsOpen("change-password")}>
@@ -97,7 +96,15 @@ export default function UserMenu() {
 
       <ChangePasswordDialog
         open={isOpen === "change-password"}
-        onOpenChange={() => setIsOpen("")}
+        onOpenChange={(nextOpen) =>
+          setIsOpen(nextOpen ? "change-password" : "")
+        }
+      />
+
+      <UpdateProfileDialog
+        open={isOpen === "update-profile"}
+        onOpenChange={(nextOpen) => setIsOpen(nextOpen ? "update-profile" : "")}
+        key={isOpen === "update-profile" ? "update-profile" : "closed"}
       />
     </>
   );
