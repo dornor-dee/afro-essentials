@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { User, LogOut, KeyRound, UserCircle } from "lucide-react";
+import { User, LogOut, KeyRound, UserCircle, Package } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,8 +13,11 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { useLogoutMutation } from "@/hooks/useAuth";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { ChangePasswordDialog } from "./ChangePasswordDialog";
 
 export default function UserMenu() {
+  const [isOpen, setIsOpen] = useState<string>("");
   const { user } = useAuth();
   const logoutMutation = useLogoutMutation();
   const path = usePathname();
@@ -35,55 +38,67 @@ export default function UserMenu() {
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button className="flex h-8 w-8 items-center justify-center">
-          <User
-            size={21}
-            className="text-white/80 cursor-pointer transition-colors hover:text-[#d4af37] focus:ring-0"
-          />
-        </button>
-      </DropdownMenuTrigger>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button className="flex h-8 w-8 items-center justify-center">
+            <User
+              size={21}
+              className="text-white/80 cursor-pointer transition-colors hover:text-[#d4af37] focus:ring-0"
+            />
+          </button>
+        </DropdownMenuTrigger>
 
-      <DropdownMenuContent
-        align="end"
-        className="w-56 border border-primary/30"
-      >
-        <DropdownMenuLabel className="flex flex-col gap-0.5">
-          <span className="text-sm font-semibold text-[#d4af37]">
-            {user.name}
-          </span>
-          <span className="text-xs font-normal text-white/50">
-            {user.email}
-          </span>
-        </DropdownMenuLabel>
+        <DropdownMenuContent
+          align="end"
+          className="w-56 border border-primary/30"
+        >
+          <DropdownMenuLabel className="flex flex-col gap-0.5">
+            <span className="text-sm font-semibold text-primary-foreground">
+              {user.name}
+            </span>
+            <span className="text-xs font-normal text-primary-foreground/70">
+              {user.email}
+            </span>
+          </DropdownMenuLabel>
 
-        <DropdownMenuSeparator className="bg-white/10" />
+          <DropdownMenuSeparator className="bg-white/10" />
 
-        <DropdownMenuItem asChild>
-          <Link href="/account" className="cursor-pointer">
-            <UserCircle size={16} className="mr-2" />
-            My Account
-          </Link>
-        </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/account/orders" className="cursor-pointer">
+              <Package size={16} className="mr-2" />
+              Order History
+            </Link>
+          </DropdownMenuItem>
 
-        <DropdownMenuItem asChild>
-          <Link href="/account/change-password" className="cursor-pointer">
+          <DropdownMenuItem asChild>
+            <Link href="/account" className="cursor-pointer">
+              <UserCircle size={16} className="mr-2" />
+              Update account info
+            </Link>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem onClick={() => setIsOpen("change-password")}>
             <KeyRound size={16} className="mr-2" />
             Change Password
-          </Link>
-        </DropdownMenuItem>
+          </DropdownMenuItem>
 
-        <DropdownMenuSeparator className="bg-white/10" />
+          <DropdownMenuSeparator className="bg-white/10" />
 
-        <DropdownMenuItem
-          onClick={handleLogout}
-          className="cursor-pointer text-red-500 focus:text-white focus:bg-red-500"
-        >
-          <LogOut size={16} className="mr-2" />
-          Logout
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <DropdownMenuItem
+            onClick={handleLogout}
+            className="cursor-pointer text-red-500 focus:text-white focus:bg-red-500"
+          >
+            <LogOut size={16} className="mr-2" />
+            Logout
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <ChangePasswordDialog
+        open={isOpen === "change-password"}
+        onOpenChange={() => setIsOpen("")}
+      />
+    </>
   );
 }
