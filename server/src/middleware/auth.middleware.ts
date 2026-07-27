@@ -29,9 +29,10 @@ export const protect = async (
   }
 
   try {
-    const decoded = jwt.verify(token, env.jwtSecret) as {
-      userId: string;
-    };
+    const decoded = jwt.verify(token, env.jwtAccessSecret) as {
+  userId: string;
+  role: string;
+};
 
     const user = await User.findById(decoded.userId).select(
       "-password -refreshToken"
