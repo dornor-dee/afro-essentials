@@ -114,42 +114,74 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-export const refreshAccessToken = async (req: Request, res: Response) => {
+export const refreshAccessToken = async (
+  req: Request,
+  res: Response
+) => {
   try {
-    const token = req.cookies?.refreshToken;
+    const currentRefreshToken = req.cookies?.refreshToken;
 
-    if (!token) {
+    if (!currentRefreshToken) {
       return res.status(401).json({
         success: false,
         message: "Refresh token missing",
       });
     }
 
-    const decoded = jwt.verify(token, env.jwtRefreshSecret) as {
+    const decoded = jwt.verify(
+      currentRefreshToken,
+      env.jwtRefreshSecret
+    ) as {
       userId: string;
     };
 
-    const user = await User.findById(decoded.userId).select("+refreshToken");
+    const user = await User.findById(decoded.userId).select(
+      "+refreshToken"
+    );
 
-    if (!user || user.refreshToken !== token) {
+    if (
+      !user ||
+      !user.refreshToken ||
+      user.refreshToken !== currentRefreshToken
+    ) {
+      res.clearCookie("refreshToken", cookieOptions);
+
       return res.status(401).json({
         success: false,
         message: "Invalid refresh token",
       });
     }
 
-    const accessToken = generateAccessToken(String(user._id), user.role);
+    const userId = String(user._id);
 
-    return res.json({
+    const newAccessToken = generateAccessToken(
+      userId,
+      user.role
+    );
+
+    const newRefreshToken = generateRefreshToken(userId);
+
+    user.refreshToken = newRefreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    res.cookie(
+      "refreshToken",
+      newRefreshToken,
+      cookieOptions
+    );
+
+    return res.status(200).json({
       success: true,
-      accessToken,
+      accessToken: newAccessToken,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Refresh token error:", error);
+
+    res.clearCookie("refreshToken", cookieOptions);
 
     return res.status(401).json({
       success: false,
-      message: "Invalid refresh token",
+      message: "Refresh token expired or invalid",
     });
   }
 };
