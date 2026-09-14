@@ -1,12 +1,10 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
 
 export interface ICartItem {
+  _id?: Types.ObjectId;
   product: Types.ObjectId;
+  variant: Types.ObjectId;
   quantity: number;
-  variant: {
-    size?: string;
-    color?: string;
-  };
   unitPrice: number;
   totalPrice: number;
 }
@@ -34,17 +32,9 @@ const cartItemSchema = new Schema<ICartItem>(
     },
 
     variant: {
-      size: {
-        type: String,
-        trim: true,
-        default: "",
-      },
-      color: {
-        type: String,
-        trim: true,
-        default: "",
-      },
-    },
+  type: Schema.Types.ObjectId,
+  required: true,
+},
 
     unitPrice: {
       type: Number,

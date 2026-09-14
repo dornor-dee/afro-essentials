@@ -1,25 +1,22 @@
 import { Router } from "express";
 import {
-  createProduct,
-  getProducts,
-} from "../controllers/product.controller";
+  uploadProductImages,
+} from "../controllers/upload.controller";
 import {
   protect,
   authorizeRoles,
 } from "../middleware/auth.middleware";
+import { upload } from "../middleware/upload.middleware";
 import { USER_ROLES } from "../constants";
 
 const router = Router();
 
-// Public routes
-router.get("/", getProducts);
-
-// Admin routes
 router.post(
-  "/",
+  "/products",
   protect,
   authorizeRoles(USER_ROLES.ADMIN),
-  createProduct
+  upload.array("images", 5),
+  uploadProductImages
 );
 
 export default router;

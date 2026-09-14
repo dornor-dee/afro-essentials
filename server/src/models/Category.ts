@@ -1,12 +1,36 @@
 import mongoose, { Document, Schema } from "mongoose";
 
+export interface ICategoryImage {
+  url: string;
+  publicId: string;
+}
+
 export interface ICategory extends Document {
   name: string;
   slug: string;
-  image?: string;
+  image?: ICategoryImage;
   description?: string;
   isActive: boolean;
 }
+
+const categoryImageSchema = new Schema<ICategoryImage>(
+  {
+    url: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    publicId: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+  },
+  {
+    _id: false,
+  }
+);
 
 const categorySchema = new Schema<ICategory>(
   {
@@ -26,8 +50,8 @@ const categorySchema = new Schema<ICategory>(
     },
 
     image: {
-      type: String,
-      default: "",
+      type: categoryImageSchema,
+      default: undefined,
     },
 
     description: {

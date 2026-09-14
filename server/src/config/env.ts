@@ -7,11 +7,16 @@ const requiredEnvVars = [
   "MONGODB_URI",
   "JWT_ACCESS_SECRET",
   "JWT_REFRESH_SECRET",
+  "CLOUDINARY_CLOUD_NAME",
+  "CLOUDINARY_API_KEY",
+  "CLOUDINARY_API_SECRET",
 ];
 
 requiredEnvVars.forEach((key) => {
   if (!process.env[key]) {
-    throw new Error(`Missing required environment variable: ${key}`);
+    throw new Error(
+      `Missing required environment variable: ${key}`
+    );
   }
 });
 
@@ -34,4 +39,13 @@ export const env = {
 
   refreshTokenExpires:
     process.env.REFRESH_TOKEN_EXPIRES || "7d",
+
+  cloudinaryCloudName:
+    process.env.CLOUDINARY_CLOUD_NAME as string,
+
+  cloudinaryApiKey:
+    process.env.CLOUDINARY_API_KEY as string,
+
+  cloudinaryApiSecret:
+    process.env.CLOUDINARY_API_SECRET as string,
 };
