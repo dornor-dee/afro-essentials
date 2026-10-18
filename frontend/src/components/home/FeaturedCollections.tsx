@@ -5,32 +5,32 @@ const collections = [
   {
     title: "Asante Kente",
     description: "Authentic handwoven cloth for traditional ceremonies.",
-    image: "/auth-image.jpeg",
+    image: "/collections/asante-kente.jpg",
   },
   {
     title: "GTP Prints",
     description: "Vibrant Ghanaian wax prints of high durability.",
-    image: "/auth-image.jpeg",
+    image: "/collections/gtp-prints.jpg",
   },
   {
     title: "Vlisco Holland",
     description: "Premium Dutch wax featuring luxury designs.",
-    image: "/auth-image.jpeg",
+    image: "/collections/vlisco-holland.jpg",
   },
   {
     title: "Dutch Wax",
     description: "Elegant African print fabrics for special occasions.",
-    image: "/auth-image.jpeg",
+    image: "/collections/dutch-wax.jpg",
   },
   {
     title: "Hitarget",
     description: "Affordable and stylish African print fabrics.",
-    image: "/auth-image.jpeg",
+    image: "/collections/hitarget.jpg",
   },
   {
     title: "ABC SUPER",
     description: "Premium ABC fabrics known for timeless designs.",
-    image: "/auth-image.jpeg",
+    image: "/collections/abc-super.jpg",
   },
 ];
 
@@ -63,17 +63,16 @@ export default function FeaturedCollections() {
             >
               <Image
                 src={item.image}
-                alt={item.title + "image"}
+                alt={item.title + " fabric"}
                 fill
                 sizes="(max-width: 768px) 100vw, 33vw"
-                objectFit="cover"
-                className="absolute z-10 object-cover"
+                className="absolute inset-0 object-cover transition-transform duration-500 ease-out group-hover:scale-105"
               />
 
-              <div className="absolute inset-0 z-10 bg-linear-to-t from-black/80 to-transparent"></div>
+              <div className="absolute inset-0 z-10 bg-linear-to-t from-black/85 via-black/40 to-transparent"></div>
 
-              <div className="relative z-20 p-3 md:p-6">
-                <h3 className="text-2xl font-bold text-white mb-2">
+              <div className="relative z-20 p-4 md:p-6">
+                <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-[#f4d068] transition-colors">
                   {item.title}
                 </h3>
                 <p className="text-gray-200 text-sm mb-4 line-clamp-2">
