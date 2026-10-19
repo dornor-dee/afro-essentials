@@ -9,7 +9,14 @@ import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import UserMenu from "../auth/UserMenu";
 
-const navLinks = ["Home", "Shop", "Kente", "Ankara", "Lace", "Accessories"];
+const navLinks = [
+  { name: "Home", href: "/" },
+  { name: "Shop", href: "/shop" },
+  { name: "Kente", href: "/shop?category=Kente" },
+  { name: "Ankara", href: "/shop?category=Ankara" },
+  { name: "Lace", href: "/shop?category=Lace" },
+  { name: "Accessories", href: "/shop?category=Accessories" },
+];
 
 export default function Navbar() {
   const path = usePathname();
@@ -139,11 +146,11 @@ export default function Navbar() {
           <div className="hidden items-center gap-8 md:flex">
             {navLinks.map((link) => (
               <Link
-                key={link}
-                href={link === "Home" ? "/" : `/${link.toLowerCase()}`}
+                key={link.name}
+                href={link.href}
                 className="relative text-sm font-medium text-white/80 transition hover:text-[#d4af37] after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-[#d4af37] after:transition-all after:duration-300 hover:after:w-full"
               >
-                {link}
+                {link.name}
               </Link>
             ))}
           </div>
@@ -252,8 +259,8 @@ export default function Navbar() {
         <div className="flex flex-col gap-2">
           {navLinks.map((link, index) => (
             <Link
-              key={link}
-              href={link === "Home" ? "/" : `/${link.toLowerCase()}`}
+              key={link.name}
+              href={link.href}
               onClick={() => setMobileMenuOpen(false)}
               style={{ transitionDelay: `${index * 50}ms` }}
               className={`rounded-lg px-3 py-3 text-sm font-medium text-white/80 transition-all hover:bg-white/10 hover:text-[#d4af37] ${
@@ -262,7 +269,7 @@ export default function Navbar() {
                   : "-translate-x-4 opacity-0"
               }`}
             >
-              {link}
+              {link.name}
             </Link>
           ))}
           <div className="my-2 border-t border-white/10" />

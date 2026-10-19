@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { products } from "@/data/products";
+import ProductCard from "@/components/products/ProductCard";
 
 function SearchResults() {
   const searchParams = useSearchParams();
@@ -28,22 +29,9 @@ function SearchResults() {
           </p>
         ) : null}
 
-        <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 md:gap-6 lg:grid-cols-3">
           {filteredProducts.map((product) => (
-            <div key={product.id} className="overflow-hidden rounded-2xl bg-white shadow-lg">
-              <div className="h-48 bg-gray-200" />
-              <div className="p-6">
-                <h2 className="text-xl font-semibold">{product.name}</h2>
-                <p className="mt-2 text-sm text-gray-500">{product.brand}</p>
-                <p className="mt-4 text-lg font-semibold text-[#d4af37]">${product.price}</p>
-                <Link
-                  href={`/products/${product.slug}`}
-                  className="mt-5 inline-block rounded-lg bg-black px-4 py-2 text-sm font-semibold text-white"
-                >
-                  View Details
-                </Link>
-              </div>
-            </div>
+            <ProductCard key={product.id} product={product} variant="default" />
           ))}
         </div>
       </div>

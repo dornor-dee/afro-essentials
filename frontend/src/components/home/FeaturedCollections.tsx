@@ -6,31 +6,37 @@ const collections = [
     title: "Asante Kente",
     description: "Authentic handwoven cloth for traditional ceremonies.",
     image: "/collections/asante-kente.jpg",
+    href: "/shop?category=Kente",
   },
   {
     title: "GTP Prints",
     description: "Vibrant Ghanaian wax prints of high durability.",
     image: "/collections/gtp-prints.jpg",
+    href: "/shop?category=Ankara",
   },
   {
     title: "Vlisco Holland",
     description: "Premium Dutch wax featuring luxury designs.",
     image: "/collections/vlisco-holland.jpg",
+    href: "/shop?category=Dutch+Wax",
   },
   {
     title: "Dutch Wax",
     description: "Elegant African print fabrics for special occasions.",
     image: "/collections/dutch-wax.jpg",
+    href: "/shop?category=Dutch+Wax",
   },
   {
     title: "Hitarget",
     description: "Affordable and stylish African print fabrics.",
     image: "/collections/hitarget.jpg",
+    href: "/shop?category=Ankara",
   },
   {
     title: "ABC SUPER",
     description: "Premium ABC fabrics known for timeless designs.",
     image: "/collections/abc-super.jpg",
+    href: "/shop?category=Dutch+Wax",
   },
 ];
 
@@ -57,7 +63,7 @@ export default function FeaturedCollections() {
         >
           {collections.map((item) => (
             <Link
-              href="#"
+              href={item.href}
               key={item.title}
               className="group relative flex h-65 md:h-80 w-[75vw] md:w-auto shrink-0 md:shrink snap-start flex-col justify-end overflow-hidden rounded-2xl bg-gray-200 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
